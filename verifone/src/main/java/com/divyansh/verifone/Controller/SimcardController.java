@@ -8,36 +8,47 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/")
 public class SimcardController {
 
     @Autowired
     private SimCardService simCardService;
-  //  @GetMapping("/")
-//    public HttpStatus home (){
-//        //return HttpStatus.ACCEPTED.
-//    }
+    @GetMapping("/")
+    public String home (){
+        //return HttpStatus.ACCEPTED.
+        return "Hello Verifone";
+    }
 
-    @GetMapping("add")
+    @PostMapping("/add")
     public SimCard addSimCard(@RequestBody SimCard simcard){
         return simCardService.addNewSimCard(simcard);
     }
 
-    @GetMapping("listall")
+    @GetMapping("/{id}")
+    public Optional<SimCard> getSimCard(@PathVariable Long id){
+        return simCardService.getSimCard(id);
+    }
+
+    @GetMapping("/listall")
     public List<SimCard> getAllSimCards(){
             return simCardService.getAllSimCardsDetails();
     }
 
-    @PutMapping("{id}")
-    public SimCard updateSimCardById(@PathVariable Long id){
-        return simCardService.updateSimCardDetailsById(id);
+    @PutMapping("/{id}")
+    public SimCard updateSimCardById(@PathVariable Long id,@RequestBody SimCard simCard){
+        return simCardService.updateSimCardDetailsById(id, simCard);
     }
 
-    @DeleteMapping("{id}")
-    public SimCard deleteSimCard(@PathVariable Long id){
-        return simCardService.deleteSimCardById(id);
+    @DeleteMapping("/{id}")
+    public void deleteSimCard(@PathVariable Long id){
+        simCardService.deleteSimCardById(id);
+    }
+
+    @GetMapping("/to-renew")
+    public List<SimCard> getAllsimCardExpiringInNext30Days(){
+        return simCardService.getsimCardExpiringInNext30Days();
     }
 
 }
